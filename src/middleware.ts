@@ -6,7 +6,7 @@ export async function middleware(req: NextRequest) {
   const url = req.nextUrl.clone(); 
   const pathname = url.pathname; 
 
-  
+   console.log("Cookies:", req.cookies);
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   console.log("Middleware Token:", token);
