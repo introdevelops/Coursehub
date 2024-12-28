@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("user") 
+  courses   Course[] 
+  orders    Order[]  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  
+}
+
+model Course {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  price       Int
+  thumbnail    String   
+  playlistLink String  @unique  
+  tutor       User     @relation(fields: [tutorId], references: [id])
+  tutorId     String
+  orders      Order[]   
+  videos       Video[] 
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deleted     Boolean  @default(false)
+}
+
+model Order {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  course    Course   @relation(fields: [courseId], references: [id] ,onDelete: Cascade) 
+  courseId  String
+  amount     Int    // Purchase amount
+  status     OrderStatus @default(PENDING)
+  createdAt DateTime @default(now())
+}
+
+enum OrderStatus {
+  PENDING   
+  COMPLETED 
+  CANCELED  
+}
+
+
+model Video {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  thumbnail   String
+  videoId     String
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id],onDelete: Cascade)
+}
