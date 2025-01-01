@@ -27,6 +27,7 @@ interface Course {
     thumbnail:"",
   });
   const [editCourse, setEditCourse] = useState<Course | null>(null);
+  const [isLoading,setIsLoading]=useState(true);
 
   const router = useRouter();
 
@@ -37,6 +38,7 @@ interface Course {
         if (response.ok) {
           const data = await response.json();
           setCourses(data);
+          setIsLoading(false);
         } else {
           toast.error("Failed to fetch courses:");
         }
@@ -171,7 +173,18 @@ interface Course {
   return (
     <>
       <Navbar />
-      <div className="p-4 mt-20 text-white">
+     {(isLoading)?
+     (<div className="w-screen h-screen flex items-center justify-center bg-black ">
+                     <Image
+                     width={100}
+                     height={100}
+                     src="/loading.gif"
+                     alt="loading"
+                     className="mt-10"
+                     />
+                 
+                   </div>) : 
+      (<div className="p-4 mt-20 text-white">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-semibold">Your Courses</h1>
           <button
@@ -300,7 +313,7 @@ interface Course {
             </div>
           </div>
         )}
-      </div>
+      </div>)}
     </>
   );
 }

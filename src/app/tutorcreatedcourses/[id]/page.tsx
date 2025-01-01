@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, use } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import { toast } from "react-toastify";
@@ -27,9 +26,9 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
   const [course, setCourse] = useState<Course | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading,setIsLoading]=useState(true);
 
-  const router = useRouter();
-
+ 
   useEffect(() => {
     const fetchCourseDetails = async () => {
       try {
@@ -37,6 +36,7 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
         if (response.ok) {
           const data = await response.json();
           setCourse(data);
+          setIsLoading(false);
         } else {
           toast.error("Failed to fetch course details");
         }
@@ -58,28 +58,31 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
     setIsModalOpen(false);
   };
 
-  if (!course) {
-    return <p>Loading...</p>;
-  }
+  
 
   return (<>
     <Navbar/>
 
-    <div className="p-4 text-white mt-16">
-      <button
-        onClick={() => router.push("/tutorcourses")}
-        className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 mb-6"
-      >
-
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"   className="size-6">
-        <path fillRule="evenodd" d="M7.72 12.53a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 1 1 1.06 1.06L9.31 12l6.97 6.97a.75.75 0 1 1-1.06 1.06l-7.5-7.5Z" clipRule="evenodd" />
-        </svg>
-
-      </button>
-      <h1 className="text-2xl font-semibold mb-4">{course.title}</h1>
-      <p className="mb-4">{course.description}</p>
+   {(isLoading)?      
+    ( <div className="w-[100%] h-screen flex items-center justify-center bg-black ">
+                   <Image
+                   width={100}
+                   height={100}
+                   src="/loading.gif"
+                   alt="loading"
+                   className="mt-10"
+                   />
+               
+                 </div>)
+   
+  
+  
+  : (<div className="p-4 text-white mt-20">
+     
+      <h1 className="text-2xl font-semibold mb-6">{course?.title}</h1>
+      <p className="mb-8">{course?.description}</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {course.videos.map((video) => (
+        {course?.videos.map((video) => (
           <div
             key={video.id}
             className="border p-4 rounded shadow hover:shadow-lg flex flex-col justify-between h-full"
@@ -129,6 +132,6 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
           </div>
         </div>
       )}
-    </div>
+    </div>)}
     </> );
 }

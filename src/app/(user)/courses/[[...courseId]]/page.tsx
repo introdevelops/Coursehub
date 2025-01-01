@@ -111,9 +111,7 @@ export default function CoursesPage({ params }: { params: Promise<{ courseId?: s
 
  
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+ 
 
   const isCourseInCart = (courseId: string) => {
     return cart.some((item) => item.id === courseId);
@@ -130,8 +128,8 @@ export default function CoursesPage({ params }: { params: Promise<{ courseId?: s
    
     return (
       <>
-      <Navbar/>
       <div className="p-4 mt-16 text-white">
+      <Navbar/>
         <h1 className="text-2xl font-semibold mb-4  whitespace-nowrap overflow-hidden text-ellipsis">{courseDetails.title}</h1>
         <p className="mb-4">{courseDetails.description}</p>
        
@@ -224,9 +222,25 @@ export default function CoursesPage({ params }: { params: Promise<{ courseId?: s
    )}
       <Navbar />
       <div className="p-4 mt-20">
-        <h1 className="text-2xl font-bold mb-7 text-center text-white">All Courses</h1>
+      {!loading &&  <h1 className="text-2xl font-bold mb-7 text-center text-white">All Courses</h1>}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {courses.map((course) => (
+          {(loading) ? 
+           
+             ( <div className="w-[322%] h-[285%] flex items-center justify-center bg-black -ml-10">
+                <Image
+                width={100}
+                height={100}
+                src="/loading.gif"
+                alt="loading"
+                className="mt-10"
+                />
+            
+              </div>)
+          
+          
+          
+          
+          :( courses.map((course) => (
             <div key={course.id} className="border p-4 rounded shadow hover:shadow-lg">
               <Image
                 height={300}
@@ -271,12 +285,12 @@ export default function CoursesPage({ params }: { params: Promise<{ courseId?: s
                   ? "bg-gray-500 text-gray-300 cursor-not-allowed"
                   : "bg-blue-500 text-white hover:bg-blue-600"
               }`}
-            >
+            > 
               {isCourseInCart(course.id) ? "Added to Cart" : "Add to Cart"}
             </button>)
               
              } </div>
-          ))}
+          )))}
         </div>
       </div>
     </>

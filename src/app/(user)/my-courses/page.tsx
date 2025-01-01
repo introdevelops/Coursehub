@@ -58,7 +58,15 @@ const MyCoursesPage = () => {
       <div className="max-w-4xl mx-auto p-6 mt-32 text-white">
         <h1 className="text-2xl font-bold mb-4">My Courses</h1>
 
-        {loading && <p>Loading your courses...</p>}
+        {loading &&   ( <div className="w-[100%] h-[100%] flex items-center justify-center bg-black mt-36">
+                        <Image
+                        width={100}
+                        height={100}
+                        src="/loading.gif"
+                        alt="loading"
+                        />
+                    
+                      </div>)}
         
         {error && <p className="text-red-500">{error}</p>}
 

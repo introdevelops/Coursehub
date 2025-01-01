@@ -1,12 +1,17 @@
 
-"use client";
+"use client"
 
 import Navbar from "@/components/Navbar";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+
 
 
 const UserLandingPage = () => {
   const router = useRouter();
+  const {status}=  useSession();
+  
 
   const handleButtonClick = () => {
     router.push("/auth/user/signup");
@@ -14,7 +19,7 @@ const UserLandingPage = () => {
 
   return (<>
     <Navbar/>
-
+    {(!(status==="loading"))?(
     <div
       className="relative h-screen flex items-center justify-center bg-cover bg-center top-0 "
       style={{
@@ -35,8 +40,20 @@ const UserLandingPage = () => {
           Start Learning
         </button>
       </div>
-    </div>
-    </>);
+    </div>):
+    (
+      <div className="w-[100%] h-screen flex items-center justify-center bg-black">
+                              <Image
+                              width={100}
+                              height={100}
+                              src="/loading.gif"
+                              alt="loading"
+                              />
+                          
+                            </div>  
+    )
+    }
+    </>)
 };
 
 export default UserLandingPage;

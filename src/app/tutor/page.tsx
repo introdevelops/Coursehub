@@ -2,10 +2,14 @@
 "use client";
 
 import Navbar from "@/components/Navbar";
+
 import { useRouter } from "next/navigation";
+import { useSession } from 'next-auth/react';
+import Image from "next/image";
 
 const TutorLandingPage = () => {
   const router = useRouter();
+  const {status}=useSession();
 
   const handleButtonClick = () => {
     router.push("/auth/tutor/login");
@@ -13,7 +17,7 @@ const TutorLandingPage = () => {
 
   return (<>
     <Navbar />
-    <div
+   {(!(status==="loading"))?(<div
       className="relative h-screen flex items-center justify-center bg-cover bg-center"
       style={{
         backgroundImage:
@@ -33,7 +37,19 @@ const TutorLandingPage = () => {
           Go to Courses
         </button>
       </div>
-    </div>
+    </div>):
+    (
+       <div className="w-[100%] h-screen flex items-center justify-center bg-black">
+                                    <Image
+                                    width={100}
+                                    height={100}
+                                    src="/loading.gif"
+                                    alt="loading"
+                                    />
+                                
+                                  </div>  
+    )
+    }
     </>
   );
 };
