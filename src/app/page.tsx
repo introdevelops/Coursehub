@@ -22,19 +22,11 @@ const UserLandingPage = () => {
     {(!(status==="loading"))?(
     <div
       className="relative h-screen flex items-center justify-center bg-cover bg-center top-0 "
-     
-    >
+      style={{
+        backgroundImage: "url('/user_side2.jpg')",
        
-       <Image
-            src="/user_side2.jpg"
-            alt="User Landing Background"
-            layout="fill"
-            objectFit="cover"
-            priority
-            placeholder="blur"
-            blurDataURL="/path-to-blurred-image.jpg" // Replace with your blurred image
-            className="z-0"
-          />
+      }}
+    >
       <div className="absolute inset-0 bg-black opacity-30"></div>
       <div className="relative z-10 bg-white bg-opacity-90 text-black p-8 rounded-lg flex flex-col items-center">
         <h1 className="text-3xl font-bold text-center mb-6">
