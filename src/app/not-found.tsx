@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 
 export default function NotFound() {
@@ -7,3 +8,10 @@ export default function NotFound() {
         </div>
     );
   }
+=======
+// src/app/_not-found.ts
+export default function NotFound() {
+  return <div>Page not found</div>;
+}
+
+>>>>>>> 77f675a55a12dfc01e460a7e31820c84e12b1a9b
