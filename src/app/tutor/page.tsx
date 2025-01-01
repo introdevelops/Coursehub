@@ -20,8 +20,8 @@ const TutorLandingPage = () => {
    {(!(status==="loading"))?(<div
       className="relative h-screen flex items-center justify-center bg-cover bg-center"
       style={{
-        backgroundImage:
-          "url('https://images.pexels.com/photos/6325954/pexels-photo-6325954.jpeg')",
+        backgroundImage: "url('/tutor_landing.jpeg')",
+       
       }}
     >
       <div className="absolute inset-0 bg-black opacity-30"></div>
