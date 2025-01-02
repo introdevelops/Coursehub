@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import LoginForm from '@/components/LoginForm';
 import Image from 'next/image';
 
+
+
 const LoginPage = () => {
 
   const [role, setRole] = useState<string>('');
@@ -33,9 +35,12 @@ const LoginPage = () => {
                             
                               </div> ; 
 
-  return (<div className="flex justify-center items-center min-h-screen bg-gray-50">
+  return (<>
+  <div className="flex justify-center items-center min-h-screen bg-gray-50">
+    
       <LoginForm role={role} />
     </div>
+    </>
   );
 };
 

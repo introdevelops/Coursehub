@@ -1,21 +1,18 @@
-
-
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
+import Image from 'next/image';
+import Navbar from './Navbar';
 
 interface LoginFormProps {
   role: string;
 }
 
-const LoginForm = ({ role }:LoginFormProps) => {
-
-
+const LoginForm = ({ role }: LoginFormProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,29 +20,36 @@ const LoginForm = ({ role }:LoginFormProps) => {
     setLoading(true);
     setError('');
 
-    
     const response = await signIn('credentials', {
       redirect: false,
       email,
       password,
-      role, 
+      role,
     });
 
     if (response?.error) {
-      setError(response.error); 
+      setError(response.error);
+      setLoading(false); // Reset loading state if there's an error
     } else {
-      
+      // Navigate based on the role
       if (role === 'user') {
         router.push('/');
       } else {
-        router.push(`/${role}/`); 
+        router.push(`/${role}/`);
       }
     }
-
-    setLoading(false);
   };
 
-  return (
+  if (loading) {
+    return (
+      <div className="w-[100%] h-screen flex items-center justify-center bg-black">
+        <Image width={100} height={100} src="/loading.gif" alt="loading" />
+      </div>
+    );
+  }
+
+  return (<>
+  <Navbar/>
     <div className="bg-white p-8 rounded-lg shadow-lg w-96 text-black">
       <h2 className="text-2xl font-bold text-center mb-4">Login as {role}</h2>
       {error && <div className="text-red-500 text-center mb-4">{error}</div>}
@@ -85,12 +89,13 @@ const LoginForm = ({ role }:LoginFormProps) => {
         </div>
       </form>
       <p className="mt-4 text-center text-sm text-gray-600">
-        Don``t have an account?{' '}
+        Don`t have an account?{' '}
         <a href={`/auth/${role}/signup`} className="text-indigo-600 hover:text-indigo-700">
           Sign up here
         </a>
       </p>
     </div>
+    </>
   );
 };
 

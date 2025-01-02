@@ -1,13 +1,13 @@
-
-
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import Navbar from "./Navbar"
 
 interface SignUpFormProps {
   role: string;
 }
 
-const SignUpForm = ({ role }:SignUpFormProps) => {
+const SignUpForm = ({ role }: SignUpFormProps) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -18,35 +18,52 @@ const SignUpForm = ({ role }:SignUpFormProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setLoading(true); // Show loading spinner
     setError('');
 
-    const response = await fetch('/api/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name, email, password, role }),
-    });
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, password, role }),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (response.ok) {
-      router.push(`/auth/${role}/login`);
-    } else {
-      setError(data.error || 'Something went wrong');
+      if (response.ok) {
+        router.push(`/auth/${role}/login`);
+      } else {
+        setError(data.error || 'Something went wrong');
+      }
+    } catch (error) {
+     if(error instanceof Error){
+      setError('An unexpected error occurred.');
     }
-
-    setLoading(false);
+    } finally {
+      setLoading(false); 
+    }
   };
 
-  return (
+  if (loading) {
+    return (
+      <div className="w-[100%] h-screen flex items-center justify-center bg-black">
+        <Image width={100} height={100} src="/loading.gif" alt="loading" />
+      </div>
+    );
+  }
+
+  return (<>
+  <Navbar/>
     <div className="bg-white p-8 rounded-lg shadow-lg w-96 text-black">
       <h2 className="text-2xl font-bold text-center mb-4">Sign Up as {role}</h2>
       {error && <div className="text-red-500 text-center mb-4">{error}</div>}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+            Name
+          </label>
           <input
             type="text"
             id="name"
@@ -56,9 +73,11 @@ const SignUpForm = ({ role }:SignUpFormProps) => {
             required
           />
         </div>
-        
+
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            Email
+          </label>
           <input
             type="email"
             id="email"
@@ -70,7 +89,9 @@ const SignUpForm = ({ role }:SignUpFormProps) => {
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            Password
+          </label>
           <input
             type="password"
             id="password"
@@ -85,7 +106,9 @@ const SignUpForm = ({ role }:SignUpFormProps) => {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none ${loading ? 'opacity-50' : ''}`}
+            className={`w-full py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none ${
+              loading ? 'opacity-50' : ''
+            }`}
           >
             {loading ? 'Registering...' : 'Sign Up'}
           </button>
@@ -98,6 +121,7 @@ const SignUpForm = ({ role }:SignUpFormProps) => {
         </a>
       </p>
     </div>
+    </>
   );
 };
 
