@@ -130,14 +130,14 @@ const Navbar = () => {
   const navItems = commonNavs(navItemsByRole);
 
   if(isLoading) {
-      return <div></div>
+      return <></>
   }
 
 
   return (
     <>
       <header className="bg-white shadow-md fixed top-0 z-50 w-full">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 ">
           <div
             className="flex items-center text-lg font-bold cursor-pointer text-black ml-4"
             onClick={() => {
@@ -190,40 +190,60 @@ const Navbar = () => {
         </div>
       </header>
       {isCart && (
-        <div className="fixed top-16 right-16 w-64 bg-white shadow-lg rounded-lg z-50">
-          <div className="flex justify-between items-center p-4 border-b">
-            <h3 className="text-lg font-semibold">Cart</h3>
-            <button
-              onClick={() => setIsCart(false)}
-              className="text-gray-500 hover:text-red-600 text-3xl"
-            >
-              &times;
-            </button>
-          </div>
-          <div className="p-4">
-            {cart.length > 0 ? (
-              <ul className="space-y-2">
-                {cart.map((item, index) => (
-                  <li
-                    key={index}
-                    className="flex justify-between items-center text-sm text-gray-700"
-                  >
-                    <span>{item.title}</span>
-                    <button
-                      onClick={() => removeFromCart(item.id)}
-                      className="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600"
-                    >
-                      Remove
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-gray-500 text-sm">Your cart is empty.</p>
-            )}
-          </div>
-        </div>
+  <div className="fixed top-16 right-16 w-80 bg-white shadow-lg rounded-lg z-50 border">
+    {/* Cart Header */}
+    <div className="flex justify-between items-center p-4 border-b">
+      <h3 className="text-lg font-semibold text-black">Cart</h3>
+      <button
+        onClick={() => setIsCart(false)}
+        className="text-gray-500 hover:text-red-600 text-3xl focus:outline-none"
+        aria-label="Close Cart"
+      >
+        &times;
+      </button>
+    </div>
+
+    
+    <div className="p-4">
+      {cart.length > 0 ? (
+        <>
+          <ul className="space-y-4">
+            {cart.map((item, index) => (
+              <li
+                key={index}
+                className="flex justify-between items-center text-sm text-gray-700"
+              >
+                <span className="font-medium truncate w-3/4">{item.title}</span>
+             
+                <button
+                  onClick={() => removeFromCart(item.id)}
+                  className="bg-red-500 text-white px-2  rounded text-lg font-bold hover:bg-red-600 focus:outline-none"
+                  aria-label={`Remove ${item.title}`}
+                >
+                   &times;
+                </button>
+              </li>
+            ))}
+          </ul>
+          
+          <button
+            
+            onClick={() => {
+              
+              router.push("/checkout");
+            }}
+            className="w-full mt-4 bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition focus:outline-none"
+          >
+            Checkout
+          </button>
+        </>
+      ) : (
+        <p className="text-gray-500 text-sm text-center">Your cart is empty.</p>
       )}
+    </div>
+  </div>
+)}
+
     </>
   );
 };

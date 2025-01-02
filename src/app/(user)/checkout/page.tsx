@@ -6,6 +6,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import { toast } from "react-toastify";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 
 const CheckoutPage = () => {
@@ -13,6 +15,7 @@ const CheckoutPage = () => {
   const { cart, clearCart } = useCart();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const {status}=useSession();
 
   
   const totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
@@ -50,6 +53,17 @@ const CheckoutPage = () => {
 
   return (<>
   <Navbar/>
+  {(status==="loading")?( <div className="w-[100%] h-[100%] flex items-center justify-center bg-black mt-44">
+                          <Image
+                          width={100}
+                          height={100}
+                          src="/loading.gif"
+                          alt="loading"
+                          />
+                      
+                        </div>
+  
+    ):(
     <div className="max-w-4xl mx-auto p-6 text-white mt-32">
       <h1 className="text-2xl font-bold mb-4">Order Summary</h1>
 
@@ -80,7 +94,7 @@ const CheckoutPage = () => {
       ) : (
         <p className="text-gray-500">Your cart is empty.</p>
       )}
-    </div>
+    </div>)}
     </>
   );
 };

@@ -128,20 +128,35 @@ export default function CoursesPage({ params }: { params: Promise<{ courseId?: s
    
     return (
       <>
-      <div className="p-4 mt-16 text-white">
+      <div className="mt-16 text-white">
       <Navbar/>
-        <h1 className="text-2xl font-semibold mb-4  whitespace-nowrap overflow-hidden text-ellipsis">{courseDetails.title}</h1>
-        <p className="mb-4">{courseDetails.description}</p>
+        <h1 className="text-2xl ml-6 mt-24 font-semibold mb-4  whitespace-nowrap overflow-hidden text-ellipsis">{courseDetails.title}</h1>
+        <p className="mb-4 ml-6">{courseDetails.description}</p>
        
-        <button
-          onClick={() => router.push("/courses")}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 mb-6">
-          Back to Courses
-        </button>
+      
+        { isCoursePurchased(courseId) ? (
+             <div className="mt-4 ml-6 mb-4 px-4 py-2 inline-block bg-green-500 text-white rounded text-center cursor-default">
+              Purchased
+            </div>
+          ) : (
+            <button
+            className={`mt-2 ml-6 mb-4 px-4 py-2 inline-block text-white rounded text-center  ${(isCourseInCart(courseDetails.id))?"bg-gray-400 cursor-default":"cursor-pointer bg-blue-500 hover:bg-blue-400 focus:bg-blue-600"} `}
+            disabled={isCourseInCart(courseId)} 
+              onClick={(e) => {
+                e.stopPropagation();
+                addToCart({
+                  id: courseDetails.id,
+                  title: courseDetails.title,
+                  price: courseDetails.price,
+                });
+              }}>
+              {isCourseInCart(courseDetails.id) ? "Added to Cart" : "Add to Cart"}
+              </button>)
+              }
 
      
-        <div className="flex flex-col gap-4">
-          {courseDetails?.videos?.map((video,index) => (
+        <div className="flex flex-col gap-4 mx-6 pb-4 ">
+          {courseDetails?.videos?.map((video) => (
             <div
               key={video.id}
               className="flex items-center justify-between border p-4 rounded shadow hover:shadow-lg w-full"
@@ -164,7 +179,7 @@ export default function CoursesPage({ params }: { params: Promise<{ courseId?: s
   
               
               <div>
-              {isPurchased || index === 0 ? (
+              {isPurchased ? (
                   <button
                     onClick={() => openModal(video)}
                     className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -186,8 +201,8 @@ export default function CoursesPage({ params }: { params: Promise<{ courseId?: s
 
 
         {isModalOpen && selectedVideo && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-            <div className="bg-black p-4 rounded shadow-lg w-full max-w-3xl relative h-[80%]">
+          <div className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center">
+            <div className="bg-transparent p-4 rounded shadow-lg w-full max-w-4xl relative h-[87%] z-100 mt-14">
               <button
                 onClick={closeModal}
                 className="absolute top-2 right-2 rounded-md bg-red-600 text-white hover:text-black w-7 h-9 text-3xl"
@@ -198,7 +213,7 @@ export default function CoursesPage({ params }: { params: Promise<{ courseId?: s
               <div className="aspect-video mb-4">
                 <iframe
                   width="100%"
-                  height="100%"
+                  height="90%"
                   src={`https://www.youtube.com/embed/${selectedVideo.videoId}`}
                   title={selectedVideo.title}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

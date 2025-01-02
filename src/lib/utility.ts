@@ -104,11 +104,13 @@ export async function fetchYouTubePlaylist(playlistLink: string) {
     `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${YOUTUBE_API_KEY}`
   );
 
+  
   if (!response.ok) {
     throw new Error("Failed to fetch YouTube playlist data");
   }
 
   const data = await response.json();
+  
   return data.items.map((item) => ({
     videoId: item.snippet.resourceId.videoId,
     title: item.snippet.title,

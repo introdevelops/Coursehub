@@ -1,25 +1,25 @@
-"use client";
+  "use client";
 
-import { useEffect, useState, use } from "react";
-import Image from "next/image";
-import Navbar from "@/components/Navbar";
-import { toast } from "react-toastify";
+  import { useEffect, useState, use } from "react";
+  import Image from "next/image";
+  import Navbar from "@/components/Navbar";
+  import { toast } from "react-toastify";
 
-interface Video {
+ interface Video {
   id: string;
   title: string;
   description: string;
   thumbnail: string;
   videoId: string;
-}
+ }
 
-interface Course {
-  title: string;
-  description: string;
-  videos: Video[];
-}
+  interface Course {
+    title: string;
+    description: string;
+    videos: Video[];
+  }
 
-export default function CourseDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+  export default function CourseDetailsPage({ params }: { params: Promise<{ id: string }> }) {
 
   const { id } = use(params);
 
@@ -30,6 +30,7 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
 
  
   useEffect(() => {
+    
     const fetchCourseDetails = async () => {
       try {
         const response = await fetch(`/api/tutor/courses/${id}`);
@@ -109,29 +110,28 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
 
       
       {isModalOpen && selectedVideo && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-black p-4 rounded shadow-lg w-full max-w-3xl relative h-[80%]">
-            <button
-              onClick={closeModal}
-              className="absolute top-2 right-2 rounded-md bg-red-600 text-white hover:text-black w-7 h-9 text-3xl"
-            >
-              &times;
-            </button>
-            <h2 className="text-xl text-white font-semibold mb-4 line-clamp-1">{selectedVideo.title}</h2>
-            <div className="aspect-video mb-4">
-              <iframe
-                width="100%"
-                height="100%"
-                src={`https://www.youtube.com/embed/${selectedVideo.videoId}`}
-                title={selectedVideo.title}
-              
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
+          <div className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center">
+            <div className="bg-transparent p-4 rounded shadow-lg w-full max-w-4xl relative h-[87%] z-100 mt-14">
+              <button
+                onClick={closeModal}
+                className="absolute top-2 right-2 rounded-md bg-red-600 text-white hover:text-black w-7 h-9 text-3xl"
+              >
+                &times;
+              </button>
+              <h2 className="text-xl text-white font-semibold mb-4">{selectedVideo.title}</h2>
+              <div className="aspect-video mb-4">
+                <iframe
+                  width="100%"
+                  height="90%"
+                  src={`https://www.youtube.com/embed/${selectedVideo.videoId}`}
+                  title={selectedVideo.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
     </div>)}
     </> );
 }

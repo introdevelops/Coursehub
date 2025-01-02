@@ -56,9 +56,10 @@ const MyCoursesPage = () => {
     <>
       <Navbar />
       <div className="max-w-4xl mx-auto p-6 mt-32 text-white">
-        <h1 className="text-2xl font-bold mb-4">My Courses</h1>
 
-        {loading &&   ( <div className="w-[100%] h-[100%] flex items-center justify-center bg-black mt-36">
+        {loading &&   (<> 
+        
+          <div className="w-[100%] h-[100%] flex items-center justify-center bg-black mt-36">
                         <Image
                         width={100}
                         height={100}
@@ -66,10 +67,11 @@ const MyCoursesPage = () => {
                         alt="loading"
                         />
                     
-                      </div>)}
+                      </div></>)}
         
         {error && <p className="text-red-500">{error}</p>}
 
+        {!loading &&  <h1 className="text-2xl font-bold mb-4">My Courses</h1>}
         {!loading && courses.length === 0 && <p>No courses purchased yet.</p>}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

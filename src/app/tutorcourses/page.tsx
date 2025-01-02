@@ -96,10 +96,12 @@ interface Course {
           thumbnail:""
         });
       } else {
+        
         toast.error(`Failed to create course: try again`);
       }
     } catch (error) {
       if(error instanceof Error) {
+        
       toast.error(`Error creating course`);
       }
     }
