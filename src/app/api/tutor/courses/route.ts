@@ -6,6 +6,8 @@ import { fetchYouTubePlaylist } from "@/lib/utility";
 
 
 
+
+
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
 
@@ -14,33 +16,78 @@ export async function POST(req: Request) {
   }
 
   const tutorId = session.user.id;
-  const { title, description, price, playlistLink } = await req.json();
+  const data = await req.json();
+
+  
+
+  const { title, description, price, playlistLink } =data;
+  
+
+  if (!title || !description || !price || !playlistLink) {
+    return NextResponse.json(
+      { error: "Please provide all required fields." },
+      { status: 400 }
+    );
+  }
+
 
   try {
-    const videos = await fetchYouTubePlaylist(playlistLink);
-
-    const newCourse = await prisma.course.create({
-      data: {
-        title,
-        description,
-        thumbnail: videos[0]?.thumbnail || "", 
-        price: parseInt(price,10),
-        playlistLink,
-        tutorId,
-        videos: {
-          createMany: {
-            data: videos,
-          },
-        },
-      },
-      include: {
-        videos: true,
-      },
+    
+    const existingCourse = await prisma.course.findFirst({
+      where: { playlistLink, deleted: false },
     });
 
-    return NextResponse.json(newCourse, { status: 201 });
-  } catch (e) {
-    return NextResponse.json({ error: e }, { status: 400 });
+    if (existingCourse) {
+      return NextResponse.json(
+        { error: "A non-deleted course with the same playlist link already exists." },
+        { status: 400 }
+      );
+    }
+
+    
+    const videos = await fetchYouTubePlaylist(playlistLink);
+
+    if (!videos.length) {
+      return NextResponse.json(
+        { error: "No videos found in the playlist." },
+        { status: 400 }
+      );
+    }
+   
+
+    
+
+    try {
+      const newCourse = await prisma.course.create({
+        data: {
+          title,
+          description,
+          thumbnail: videos[0]?.thumbnail || "",
+          price: parseInt(price,10),
+          playlistLink,
+          tutorId,
+          videos: {
+            createMany: { data: videos },
+          },
+        },
+        include: { videos: true },
+      });
+      
+      return NextResponse.json(newCourse, { status: 201 });
+
+    } catch (prismaError) {
+      console.error("Prisma error:", prismaError);
+      throw prismaError; 
+    }
+    
+
+  } catch (e: unknown) {
+    if(e instanceof Error) console.error("Error creating course:", e);
+
+    return NextResponse.json(
+      { error: "An error occurred while creating the course." },
+      { status: 500 }
+    );
   }
 }
 

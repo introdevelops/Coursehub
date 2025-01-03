@@ -25,29 +25,41 @@ export async function GET(req: Request, { params }: { params:Promise< { id: stri
   return NextResponse.json(course);
 }
 
+
+
 export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } =  await params;
+  const { id } = await params;
 
   try {
-    
-    const existingCourse = await prisma.course.findUnique({ where: { id } });
+    const existingCourse = await prisma.course.findUnique({
+      where: { id }, 
+    });
 
     if (!existingCourse) {
       return NextResponse.json({ error: "Course not found." }, { status: 404 });
     }
 
+ 
+      await prisma.course.update({
+        where: { id },
+        data: {
+          deleted: true,
+          playlistLink: `${existingCourse.playlistLink}-${Date.now()}`, 
+        },
+      });
     
-    await prisma.course.update({
-      where: { id },
-      data: { deleted: true },
-    });
+     
 
-    return NextResponse.json({ message: "Course marked as deleted successfully." }, { status: 200 });
+    return NextResponse.json(
+      { message: "Course and playlist updated successfully." },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error marking course as deleted:", error);
     return NextResponse.json({ error: "Failed to mark course as deleted." }, { status: 500 });
   }
 }
+
 
 
 

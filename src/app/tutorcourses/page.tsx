@@ -28,7 +28,7 @@ interface Course {
   });
   const [editCourse, setEditCourse] = useState<Course | null>(null);
   const [isLoading,setIsLoading]=useState(true);
-
+  
   const router = useRouter();
 
   useEffect(() => {

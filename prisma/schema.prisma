@@ -35,6 +35,7 @@ model Course {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   deleted     Boolean  @default(false)
+  @@unique([playlistLink,deleted])
 }
 
 model Order {
