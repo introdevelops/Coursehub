@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import SignUpForm from '@/components/SignupForm';
 import Image from 'next/image';
-import Navbar from '@/components/Navbar';
+
 
 const SignUpPage = () => {
 
